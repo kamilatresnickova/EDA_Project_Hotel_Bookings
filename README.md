@@ -14,10 +14,10 @@ Does a longer lead time (time between booking and arrival) correlate with a high
 
 ## Dataset Overview
 The data is sourced from Kaggle (Hotel Booking Demand Dataset (Kaggle)). It contains 119,390 records spanning from July 2015 to August 2017.
-The dataset focuses on:
-*City Hotel:* An urban hotel setting.
+The dataset focuses on:  
+*City Hotel:* An urban hotel setting.  
 *Resort Hotel:* A holiday resort setting.
 
-## Technical Implementation 
-*Database Environment:* Set up a local PostgreSQL 18 database on macOS.
-*Schema Design:* Created the hotel_bookings table using optimized data types (TEXT, INT, DECIMAL, and DATE).
+## Technical Implementation  
+*Database Environment:* Set up a local PostgreSQL 18 database on macOS.  
+*Schema Design:* Created the hotel_bookings table using optimized data types (TEXT, INT, DECIMAL, and DATE).  
