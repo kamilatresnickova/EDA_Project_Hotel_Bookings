@@ -7,12 +7,12 @@ WORK IN PROGRESS - Portfolio Project focused on hotel bookings analysis using SQ
 The primary goal of this project is to perform a comprehensive Exploratory Data Analysis (EDA) on a dataset containing booking records from two distinct hotel types. By analyzing this data, I aim to uncover customer behavioral patterns, identify key drivers behind booking cancellations, and analyze pricing strategies.
 
 ### Key Questions
-What is the cancellation rate across different hotel types?
-Which months experience the highest demand and generate the most revenue?
-How do guest demographics (families vs. individuals) impact the Average Daily Rate (ADR)?
-Does a longer lead time (time between booking and arrival) correlate with a higher cancellation probability?
+*What is the cancellation rate across different hotel types?*  
+*Which months experience the highest demand and generate the most revenue?*  
+*How do guest demographics (families vs. individuals) impact the Average Daily Rate (ADR)?*  
+*Does a longer lead time (time between booking and arrival) correlate with a higher cancellation probability?*  
 
-## Dataset Overview
+### Dataset Overview
 The data is sourced from Kaggle (Hotel Booking Demand Dataset (Kaggle)). It contains 119,390 records spanning from July 2015 to August 2017.
 The dataset focuses on:  
 *City Hotel:* An urban hotel setting.  
