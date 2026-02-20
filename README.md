@@ -13,7 +13,7 @@ The primary goal of this project is to perform a comprehensive Exploratory Data 
 *Does a longer lead time (time between booking and arrival) correlate with a higher cancellation probability?*  
 
 ### Dataset Overview
-The data is sourced from Kaggle (Hotel Booking Demand Dataset (Kaggle)). It contains 119,390 records spanning from July 2015 to August 2017.
+The data is sourced from Kaggle ([Hotel Booking Demand Dataset](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand?resource=download)). It contains 119,390 records spanning from July 2015 to August 2017.
 The dataset focuses on:  
 *City Hotel:* An urban hotel setting.  
 *Resort Hotel:* A holiday resort setting.
