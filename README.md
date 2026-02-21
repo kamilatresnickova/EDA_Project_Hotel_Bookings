@@ -21,3 +21,19 @@ The dataset focuses on:
 ## Technical Implementation  
 *Database Environment:* Set up a local PostgreSQL 18 database on macOS.  
 *Schema Design:* Created the hotel_bookings table using optimized data types (TEXT, INT, DECIMAL, and DATE).  
+
+### Data Profiling 
+Performed a deep dive into the dataset’s 32 columns to assess data quality and logical consistency.
+
+*Anomalies Detected:* Identified 180 "Ghost Bookings" (0 total guests), inconsistent country codes (ISO-2 vs ISO-3), and extreme ADR outliers (e.g., negative values and a single entry of 5,400).
+
+*Null Value Analysis:* Quantified missing data in agent, company, and children columns to prepare for systematic cleaning.
+
+## Data Cleaning & Transformation 
+Developed a robust SQL cleaning script to ensure the dataset is "analysis-ready."
+
+*Data Sanitization:* Replaced text-based 'NULL' strings with actual database NULL values and standardized categorical data (e.g., remapping Undefined meals to SC).
+
+*Integrity Enforcement:* Removed logically invalid records (0 guests) and corrected pricing errors to prevent skewed averages.
+
+*Feature Engineering:* Transformed separate year, month, and day columns into a unified arrival_date (DATE type) using a custom mapping and casting logic to enable time-series analysis.
