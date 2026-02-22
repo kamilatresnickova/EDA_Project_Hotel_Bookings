@@ -1,5 +1,5 @@
 # EDA_Project_Hotel_Bookings
-WORK IN PROGRESS - Portfolio Project focused on hotel bookings analysis using SQL and PowerBI. 
+WORK IN PROGRESS - A data-driven SQL and PowerBI project focused on auditing, cleaning, and analyzing over 119k hotel booking records to uncover customer behavior patterns and optimize revenue insights.
 
 ---
 
