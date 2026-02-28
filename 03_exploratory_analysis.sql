@@ -10,7 +10,7 @@
 -- 1. BUSINESS PERFORMANCE AND SEASONALITY ANALYSIS
 -- =============================================================================
 
--- 3.1. General Overview of Bookings and Cancellations
+-- 1.1. General Overview of Bookings and Cancellations
 SELECT hotel, 
        COUNT(*) AS total_bookings, 
        SUM(is_canceled) AS total_cancelled,
@@ -18,13 +18,7 @@ SELECT hotel,
 FROM hotel_bookings
 GROUP BY hotel;
 
-/* FINDINGS:
-- City Hotel: 79,162 bookings, 41.79% cancellation rate.
-- Resort Hotel: 40,046 bookings, 27.77% cancellation rate.
-- Insight: City Hotel has a significantly higher cancellation risk (nearly 1 in 2 bookings are cancelled).
-*/
-
--- 3.2. Monthly Arrival Trends per Hotel
+-- 1.2. Monthly Arrival Trends per Hotel
 -- Total bookings per month (only non-cancelled)
 SELECT hotel, 
        TO_CHAR(arrival_date, 'YYYY-MM') AS month_year, 
@@ -72,7 +66,7 @@ WHERE is_canceled = 0
 GROUP BY hotel, arrival_date_month
 ORDER BY hotel, total_arrivals DESC;
 
--- 3.3. Arrivals by Day of the Week (total arrivals per weekday over the entire period)
+-- 1.3. Arrivals by Day of the Week (total arrivals per weekday over the entire period)
 SELECT hotel, 
     TO_CHAR(arrival_date, 'Day') AS day_of_week, 
     EXTRACT(DOW FROM arrival_date) AS day_num, 
@@ -82,7 +76,7 @@ WHERE is_canceled = 0
 GROUP BY hotel, day_of_week, day_num
 ORDER BY hotel, day_num;
 
--- 3.4. Financial Insights
+-- 1.4. Financial Insights
 -- Total Revenue and Average Daily Rate (ADR)
 SELECT hotel,
     ROUND(SUM(adr * (stays_in_weekend_nights + stays_in_week_nights)), 0) AS total_revenue,
@@ -101,7 +95,7 @@ WHERE is_canceled = 0
 GROUP BY hotel, arrival_date_month
 ORDER BY hotel, monthly_revenue DESC;
 
--- 3.4. Length of Stay Analysis
+-- 1.5. Length of Stay Analysis
 SELECT hotel, 
        ROUND(AVG(stays_in_weekend_nights + stays_in_week_nights), 2) AS avg_length_of_stay
 FROM hotel_bookings
@@ -111,6 +105,7 @@ GROUP BY hotel;
 /* FINDINGS: 
 - Data covers 26 months (July 2015 - Aug 2017).
 - CITY HOTEL:
+   - 79,162 total bookings, 41.79% cancellation rate.
    - Average: 1172 bookings/month.
    - Peak: May 2017 (2,331 arrivals).
    - Low: July 2015 (457 arrivals). 
@@ -123,6 +118,7 @@ GROUP BY hotel;
    - Revenue: Peak in August (1.98M €) and July (1.69M €). Stability from March to October Revenue stays above 1M €. Low in January (0.53M €) – about 4x less than the August peak.
    - Average length of stay: 2.92 nights.
 - RESORT HOTEL:
+   - 40,046 total bookings, 27.77% cancellation rate.
    - Average: 1112 bookings/month.
    - Peak: October 2016 (1,417 arrivals).
    - Low: January 2016 (765 arrivals).
@@ -134,7 +130,14 @@ GROUP BY hotel;
    - Average revenue per booking: 401.08 €
    - Revenue: Peak in August (2.94M €) and July (2.41M €). Extreme Seasonality: August revenue is 12x higher than January (0.25M €).
    - Average length of stay: 4.14 nights.
+   */
 
 -- =============================================================================
 -- END OF BUSINESS PERFORMANCE AND SEASONALITY ANALYSIS
 -- =============================================================================
+
+-- =============================================================================
+-- 2. CUSTOMER SEGMENTATION & BEHAVIOR ANALYSIS
+-- =============================================================================
+
+-- 2.1. Geographic segmentation
