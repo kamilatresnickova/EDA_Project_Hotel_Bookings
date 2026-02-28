@@ -1,7 +1,9 @@
-/*
+*
 * PROJECT:       Hotel Bookings Analysis
 * SCRIPT:        02_data_cleaning.sql
-* DESCRIPTION:  
+* DESCRIPTION:  Data profiling and cleaning for the hotel_bookings dataset. 
+This script identifies inconsistencies, outliers, and missing values across all columns. 
+Based on the profiling results, targeted cleaning steps are applied to ensure data integrity for subsequent analysis.
 * AUTHOR:        Kamila Třešničková
 * DATE:          2026-02-19
 */
