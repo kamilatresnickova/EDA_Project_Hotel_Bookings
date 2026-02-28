@@ -1,4 +1,4 @@
-*
+/*
 * PROJECT:       Hotel Bookings Analysis
 * SCRIPT:        02_data_cleaning.sql
 * DESCRIPTION:  Data profiling and cleaning for the hotel_bookings dataset. 
