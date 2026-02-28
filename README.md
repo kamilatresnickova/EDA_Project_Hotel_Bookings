@@ -6,27 +6,38 @@ WORK IN PROGRESS - A data-driven SQL and PowerBI project focused on auditing, cl
 ## Business Case
 The primary goal of this project is to perform a comprehensive Exploratory Data Analysis (EDA) on a dataset containing booking records from two distinct hotel types. 
 
-By analyzing this data, I aim to uncover business performance and seasonality insights, customer behavioral patterns, identify key drivers behind booking cancellations, and analyze operational insights..
+By analyzing this data, I aim to uncover business performance and seasonality insights, customer behavioral patterns, identify key drivers behind booking cancellations, and analyze operational insights.
 
 ### Key Questions
 
 1. Business Performance & Seasonality
+
 *Which months experience the highest demand and generate the most revenue?*
+
 *How do total revenue and occupancy rates fluctuate between the two hotel types over the years?*
+
 *Which days of the week are most frequent for guest arrivals?*
 
 2. Customer Segmentation & Behavior
+
 *How do guest demographics (families vs. individuals) impact the Average Daily Rate (ADR) and length of stay?*
+
 *Which countries represent the top 10 most valuable markets in terms of guest volume and total revenue?*
+
 *How often do guests receive room upgrades (reserved vs. assigned room types)?*
 
 3. Cancellation Analysis
+
 *What is the cancellation rate across different hotel types?*
+
 *Does a longer lead time (time between booking and arrival) correlate with a higher cancellation probability?*
+
 *How effective are different deposit types (No Deposit vs. Non-Refundable) in securing bookings?*
 
 4. Operational Insights
+
 *Do special requests or the need for parking spaces correlate with lower cancellation rates?*
+
 *How does the behavior of repeated guests differ from first-time visitors in terms of loyalty and revenue?*
 
 
