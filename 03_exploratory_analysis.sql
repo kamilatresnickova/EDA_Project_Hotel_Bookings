@@ -258,5 +258,12 @@ ORDER BY hotel, share_pct DESC;
    - Pricing Strategy: Repeated guests pay a lower ADR (64.02 €) compared to first-time visitors (92.46 €).
    - Cancellation Behavior: Much cleaner cancelation history (0.07) compared to their counterparts in the City Hotel.
    - Meal Plan Preferences: BB is the primary choice at 76.61%. Resort Specifics: HB (Half Board) is significantly higher here (19.01%) compared to the City Hotel. While still a niche, FB is much more relevant (1.08%).
-   
    */
+
+-- =============================================================================
+-- END OF CUSTOMER SEGMENTATION & BEHAVIOR ANALYSIS
+-- =============================================================================
+
+-- =============================================================================
+-- 3. CANCELLATION ANALYSIS
+-- =============================================================================
