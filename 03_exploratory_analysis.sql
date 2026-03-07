@@ -11,7 +11,8 @@
 -- =============================================================================
 
 -- 1.1. General Overview of Bookings and Cancellations
-SELECT hotel, 
+SELECT 
+       hotel, 
        COUNT(*) AS total_bookings, 
        SUM(is_canceled) AS total_cancelled,
        ROUND(AVG(is_canceled) * 100, 2) AS cancellation_rate_pct
@@ -20,7 +21,8 @@ GROUP BY hotel;
 
 -- 1.2. Monthly Arrival Trends per Hotel
 -- Total bookings per month (only non-cancelled)
-SELECT hotel, 
+SELECT 
+       hotel, 
        TO_CHAR(arrival_date, 'YYYY-MM') AS month_year, 
        COUNT(*) AS booking_count
 FROM hotel_bookings
@@ -30,7 +32,8 @@ ORDER BY hotel, month_year;
 
 -- Identifying Average Monthly Bookings per Hotel
 WITH MonthlyStats AS (
-    SELECT hotel, 
+    SELECT 
+           hotel, 
            TO_CHAR(arrival_date, 'YYYY-MM') AS month_year, 
            COUNT(*) AS booking_count
     FROM hotel_bookings
@@ -42,14 +45,16 @@ GROUP BY hotel;
 
 -- Identifying Best and Worst Months per Hotel
 WITH MonthlyStats AS (
-    SELECT hotel, 
+    SELECT 
+           hotel, 
            TO_CHAR(arrival_date, 'YYYY-MM') AS month_year, 
            COUNT(*) AS booking_count
     FROM hotel_bookings
     WHERE is_canceled = 0
     GROUP BY hotel, month_year)
 SELECT * FROM (
-    SELECT *,
+    SELECT 
+          *,
           RANK() OVER(PARTITION BY hotel ORDER BY booking_count DESC) as rank_max,
           RANK() OVER(PARTITION BY hotel ORDER BY booking_count ASC) as rank_min
     FROM MonthlyStats) sub
@@ -57,7 +62,8 @@ WHERE rank_max = 1 OR rank_min = 1
 ORDER BY hotel, booking_count DESC;
 
 -- Seasonal Baseline per Hotel (Aggregated months across all years)
-SELECT hotel,
+SELECT 
+       hotel,
        arrival_date_month, 
        COUNT(*) AS total_arrivals, 
        ROUND(AVG(adr), 2) AS avg_adr
@@ -67,10 +73,11 @@ GROUP BY hotel, arrival_date_month
 ORDER BY hotel, total_arrivals DESC;
 
 -- 1.3. Arrivals by Day of the Week (total arrivals per weekday over the entire period)
-SELECT hotel, 
-    TO_CHAR(arrival_date, 'Day') AS day_of_week, 
-    EXTRACT(DOW FROM arrival_date) AS day_num, 
-    COUNT(*) AS total_arrivals
+SELECT 
+       hotel, 
+       TO_CHAR(arrival_date, 'Day') AS day_of_week, 
+       EXTRACT(DOW FROM arrival_date) AS day_num, 
+       COUNT(*) AS total_arrivals
 FROM hotel_bookings
 WHERE is_canceled = 0
 GROUP BY hotel, day_of_week, day_num
@@ -78,16 +85,18 @@ ORDER BY hotel, day_num;
 
 -- 1.4. Financial Insights
 -- Total Revenue and Average Daily Rate (ADR)
-SELECT hotel,
-    ROUND(SUM(adr * (stays_in_weekend_nights + stays_in_week_nights)), 0) AS total_revenue,
-    ROUND(AVG(adr), 2) AS avg_adr,
-    ROUND(SUM(adr * (stays_in_weekend_nights + stays_in_week_nights)) / COUNT(*), 2) AS avg_revenue_per_booking
+SELECT
+       hotel,
+       ROUND(SUM(adr * (stays_in_weekend_nights + stays_in_week_nights)), 0) AS total_revenue,
+       ROUND(AVG(adr), 2) AS avg_adr,
+       ROUND(SUM(adr * (stays_in_weekend_nights + stays_in_week_nights)) / COUNT(*), 2) AS avg_revenue_per_booking
 FROM hotel_bookings
 WHERE is_canceled = 0
 GROUP BY hotel;
 
 --Monthly Revenue Stream per Hotel
-SELECT hotel, 
+SELECT 
+       hotel, 
        arrival_date_month,
        ROUND(SUM(adr * (stays_in_weekend_nights + stays_in_week_nights)), 0) AS monthly_revenue
 FROM hotel_bookings
@@ -96,7 +105,8 @@ GROUP BY hotel, arrival_date_month
 ORDER BY hotel, monthly_revenue DESC;
 
 -- 1.5. Length of Stay Analysis
-SELECT hotel, 
+SELECT 
+       hotel, 
        ROUND(AVG(stays_in_weekend_nights + stays_in_week_nights), 2) AS avg_length_of_stay
 FROM hotel_bookings
 WHERE is_canceled = 0
@@ -145,7 +155,7 @@ GROUP BY hotel;
 -- STEP 1: Revenue calculation per country and hotel
 WITH HotelRevenue AS (
     SELECT 
-        hotel,
+       hotel,
         country,
         ROUND(SUM(adr * (stays_in_weekend_nights + stays_in_week_nights)), 0) AS total_revenue,
         COUNT(*) AS booking_count
@@ -170,14 +180,14 @@ ORDER BY hotel, revenue_rank;
 --2.2. Customer Segmentation - Families vs. Guests without Children
 
 SELECT 
-    hotel,
-    CASE 
+       hotel,
+       CASE 
         WHEN children > 0 OR babies > 0 THEN 'Family'
         ELSE 'No Children'
-    END AS guest_segment,
-    COUNT(*) AS total_bookings,
-    ROUND(AVG(adr), 2) AS avg_daily_rate,
-    ROUND(AVG(stays_in_weekend_nights + stays_in_week_nights), 2) AS avg_length_of_stay
+       END AS guest_segment,
+       COUNT(*) AS total_bookings,
+        ROUND(AVG(adr), 2) AS avg_daily_rate,
+       ROUND(AVG(stays_in_weekend_nights + stays_in_week_nights), 2) AS avg_length_of_stay
 FROM hotel_bookings
 WHERE is_canceled = 0
 GROUP BY hotel, guest_segment
@@ -186,13 +196,13 @@ ORDER BY hotel, guest_segment;
 
 -- 2.3. Room Upgrades Analysis - percentage of guests receiving a different room type than reserved (assigned vs. reserved)
 SELECT 
-    hotel,
-    CASE 
+       hotel,
+       CASE 
         WHEN reserved_room_type = assigned_room_type THEN 'Match'
         ELSE 'Upgrade/Change'
-    END AS room_assignment,
-    COUNT(*) AS total_bookings,
-    ROUND(COUNT(*)::numeric / SUM(COUNT(*)) OVER(PARTITION BY hotel) * 100, 2) AS share_pct
+       END AS room_assignment,
+       COUNT(*) AS total_bookings,
+       ROUND(COUNT(*)::numeric / SUM(COUNT(*)) OVER(PARTITION BY hotel) * 100, 2) AS share_pct
 FROM hotel_bookings
 WHERE is_canceled = 0
 GROUP BY hotel, room_assignment
@@ -200,11 +210,11 @@ ORDER BY hotel, share_pct DESC;
 
 -- 2.4. Revenue and ADR by Market Segment 
 SELECT 
-    hotel,
-    market_segment,
-    COUNT(*) AS total_bookings,
-    ROUND(AVG(adr), 2) AS avg_adr,
-    ROUND(AVG(lead_time), 0) AS avg_lead_time_days
+       hotel,
+       market_segment,
+       COUNT(*) AS total_bookings,
+       ROUND(AVG(adr), 2) AS avg_adr,
+       ROUND(AVG(lead_time), 0) AS avg_lead_time_days
 FROM hotel_bookings
 WHERE is_canceled = 0
 GROUP BY hotel, market_segment
@@ -212,21 +222,21 @@ ORDER BY hotel, total_bookings DESC
 
 -- 2.5. Revenue and ADR by Repeated Guests
 SELECT 
-    hotel,
-    is_repeated_guest,
-    COUNT(*) AS total_bookings,
-    ROUND(AVG(adr), 2) AS avg_adr,
-    ROUND(AVG(previous_cancellations), 2) AS avg_prev_cancellations
+       hotel,
+       is_repeated_guest,
+       COUNT(*) AS total_bookings,
+       ROUND(AVG(adr), 2) AS avg_adr,
+       ROUND(AVG(previous_cancellations), 2) AS avg_prev_cancellations
 FROM hotel_bookings
 WHERE is_canceled = 0
 GROUP BY hotel, is_repeated_guest;
 
 -- 2.6. Meal Plan Preferences 
 SELECT 
-    hotel,
-    meal,
-    COUNT(*) AS count_bookings,
-    ROUND(COUNT(*)::numeric / SUM(COUNT(*)) OVER(PARTITION BY hotel) * 100, 2) AS share_pct
+       hotel,
+       meal,
+       COUNT(*) AS count_bookings,
+       ROUND(COUNT(*)::numeric / SUM(COUNT(*)) OVER(PARTITION BY hotel) * 100, 2) AS share_pct
 FROM hotel_bookings
 WHERE is_canceled = 0
 GROUP BY hotel, meal
@@ -267,3 +277,83 @@ ORDER BY hotel, share_pct DESC;
 -- =============================================================================
 -- 3. CANCELLATION ANALYSIS
 -- =============================================================================
+
+-- 3.1. Cancellation Rate by Lead Time Groups
+
+-- STEP 1: Divide reservations based on how far in advance they were created
+WITH LeadTimeSegments AS (
+    SELECT 
+        hotel,
+        is_canceled,
+        CASE 
+            WHEN lead_time <= 7 THEN '01. Last Minute (0-7 days)'
+            WHEN lead_time <= 30 THEN '02. Short Term (8-30 days)'
+            WHEN lead_time <= 90 THEN '03. Medium Term (31-90 days)'
+            WHEN lead_time <= 180 THEN '04. Long Term (91-180 days)'
+            ELSE '05. Very Long Term (180+ days)'
+        END AS lead_time_group
+    FROM hotel_bookings
+)
+-- STEP 2: Calculate cancellation rates for each lead time group and hotel
+SELECT 
+    hotel,
+    lead_time_group,
+    COUNT(*) AS total_bookings,
+    SUM(is_canceled) AS cancellations,
+    ROUND(AVG(is_canceled) * 100, 2) AS cancellation_rate_pct
+FROM LeadTimeSegments
+GROUP BY hotel, lead_time_group
+ORDER BY hotel, lead_time_group;
+
+-- 3.2. Cancellation Rate by Deposit Type
+SELECT 
+    hotel,
+    deposit_type,
+    COUNT(*) AS total_bookings,
+    SUM(is_canceled) AS cancellations,
+    ROUND(AVG(is_canceled) * 100, 2) AS cancellation_rate_pct
+FROM hotel_bookings
+GROUP BY hotel, deposit_type
+ORDER BY hotel, cancellation_rate_pct DESC;
+
+-- 3.3. Cancellation Rate by Guest History
+-- STEP 1: Categorize guests based on their cancellation history
+WITH GuestHistory AS (
+    SELECT 
+        hotel,
+        is_canceled,
+        CASE 
+         WHEN previous_cancellations = 0 THEN '01. Clean History (0)'
+         WHEN previous_cancellations BETWEEN 1 AND 2 THEN '02. Occasional (1-2)'
+         ELSE '03. Serial Canceler (3+)'
+        END AS history_segment
+    FROM hotel_bookings
+)
+-- STEP 2: Calculate cancellation rates for each guest history segment and hotel
+SELECT 
+       hotel,
+       history_segment,
+       COUNT(*) AS total_bookings,
+       SUM(is_canceled) AS current_cancellations,
+       ROUND(AVG(is_canceled) * 100, 2) AS cancellation_rate_pct
+FROM GuestHistory
+GROUP BY hotel, history_segment
+ORDER BY hotel, history_segment;
+
+/* FINDINGS: 
+- CITY HOTEL:
+- Lead time analysis: Last Minute bookings are highly stable (12.18% cancellation rate), while Very Long Term bookings are extremely volatile (64.07% cancellation rate).
+- The cancellation Trend: Cancellation probability increases steadily with every time bracket, jumping nearly 20% between the "Short Term" and "Long Term" segments.
+- Deposit type analysis:The Non-Refundable Anomaly: An astonishing 99.81% of "Non Refund" bookings (12,843 out of 12,867) were cancelled. REQUIRES FURTHER INVESTIGATION.
+- Other deposit typers: Standard bookings without a deposit have a significantly lower cancellation rate (30.51%). Refundable Segment (small sample size of (20)) has high cancellation rate at 70%.
+- Guest history analysis: Guests with even a minor history of cancellations (1–2 previous) show an extreme 95.27% current cancellation rate. REQUIRES FURTHER INVESTIGATION.
+- Other history segments: First-time guests or those with zero cancellations are remarkably more reliable (38.04% cancellation rate). Paradoxically, "Serial Cancelers" (3+ previous) have a lower rate (25.31%), but the sample size is very small (162), which may skew the result.
+   
+
+- RESORT HOTEL:
+- Lead time analysis: Excellent stability for Last Minute bookings (6.50% cancellation rate), the "Very Long Term" segment peaks at 41.59% cancellations.
+- The cancellation trend: While also showing an upward trend, the Resort is more stable than the City. The risk doubles when moving from "Short Term" (21.91%) to "Very Long Term" (41.59%).
+- Deposit type analysis:The Non-Refundable Anomaly: An astonishing 95.99% of "Non Refund" bookings (1,650 out of 1,719) were cancelled. REQUIRES FURTHER INVESTIGATION.
+- Other deposit types: Standard bookings without a deposit have a significantly lower cancellation rate (24.74%). Refundable Segment (sample size of 142) is surprisingly stable with a low cancellation rate at 15.49%.
+- Guest history analysis: Guests with 1–2 previous cancellations have a massive 82.45% probability of cancelling again. Unlike the City, "Serial Cancelers" (3+ previous) in the Resort are almost guaranteed to cancel, with a staggering 96.13% rate. REQUIRES FURTHER INVESTIGATION.
+- Other history segments: Standard guests without a cancellation history remain the most stable segment at 26.18%.
