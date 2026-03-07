@@ -340,6 +340,31 @@ FROM GuestHistory
 GROUP BY hotel, history_segment
 ORDER BY hotel, history_segment;
 
+-- 3.4. Cancellation Rate by Market Segment
+SELECT 
+       hotel,
+       market_segment,
+       COUNT(*) AS total_bookings,
+       SUM(is_canceled) AS cancellations,
+       ROUND(AVG(is_canceled) * 100, 2) AS cancellation_rate_pct
+FROM hotel_bookings
+GROUP BY hotel, market_segment
+ORDER BY hotel, cancellation_rate_pct DESC;
+
+-- 3.5. Impact of Booking Changes on Cancellations
+SELECT 
+       hotel,
+       CASE 
+        WHEN booking_changes > 0 THEN 'With Changes' 
+        ELSE 'No Changes' 
+       END AS change_status,
+       COUNT(*) AS total_bookings,
+       SUM(is_canceled) AS cancellations,
+       ROUND(AVG(is_canceled) * 100, 2) AS cancellation_rate_pct
+FROM hotel_bookings
+GROUP BY hotel, change_status
+ORDER BY hotel, cancellation_rate_pct DESC;
+
 /* FINDINGS: 
 - CITY HOTEL:
 - Lead time analysis: Last Minute bookings are highly stable (12.18% cancellation rate), while Very Long Term bookings are extremely volatile (64.07% cancellation rate).
@@ -348,7 +373,9 @@ ORDER BY hotel, history_segment;
 - Other deposit typers: Standard bookings without a deposit have a significantly lower cancellation rate (30.51%). Refundable Segment (small sample size of (20)) has high cancellation rate at 70%.
 - Guest history analysis: Guests with even a minor history of cancellations (1–2 previous) show an extreme 95.27% current cancellation rate. REQUIRES FURTHER INVESTIGATION.
 - Other history segments: First-time guests or those with zero cancellations are remarkably more reliable (38.04% cancellation rate). Paradoxically, "Serial Cancelers" (3+ previous) have a lower rate (25.31%), but the sample size is very small (162), which may skew the result.
-   
+- Market segment analysis: Groups are the most volatile segment (68.92% cancellation rate). Direct bookings are the most stable commercial segment (cancellation rate of 17.39%). Online TA (37.45%) and Offline TA/TO (42.88%) show moderate risk, significantly higher than direct channels. 
+- Booking changes analysis: Making a change reduces the likelihood of cancellation by nearly 64% (Guests without changes: cancellation rate of 45.52%, guests with changes only 16.46%.
+
 
 - RESORT HOTEL:
 - Lead time analysis: Excellent stability for Last Minute bookings (6.50% cancellation rate), the "Very Long Term" segment peaks at 41.59% cancellations.
@@ -357,3 +384,10 @@ ORDER BY hotel, history_segment;
 - Other deposit types: Standard bookings without a deposit have a significantly lower cancellation rate (24.74%). Refundable Segment (sample size of 142) is surprisingly stable with a low cancellation rate at 15.49%.
 - Guest history analysis: Guests with 1–2 previous cancellations have a massive 82.45% probability of cancelling again. Unlike the City, "Serial Cancelers" (3+ previous) in the Resort are almost guaranteed to cancel, with a staggering 96.13% rate. REQUIRES FURTHER INVESTIGATION.
 - Other history segments: Standard guests without a cancellation history remain the most stable segment at 26.18%.
+- Market segment analysis: Groups lead in cancelations (42.43% cancellation rate). Direct bookings remain the "gold standard" of reliability (13.49% cancellations). Unlike the city, Offline TA/TO in the resort is very stable (15.21%), while Online TA is more volatile (37.45% cancellation rate).
+- Booking changes analysis: Making a change reduces the likelihood of cancellation by approximately 52% (Guests without changes: cancellation rate of 30.91%, guests with changes only 14.79%).
+*/
+
+-- =============================================================================
+-- END OF CANCELLATION ANALYSIS
+-- =============================================================================
