@@ -1,9 +1,13 @@
 /*
 * PROJECT:       Hotel Bookings Analysis
 * SCRIPT:        03_exploratory_analysis.sql
-* DESCRIPTION: 
+* DESCRIPTION:       This script performs an in-depth exploratory data analysis (EDA) on the hotel bookings dataset. It is structured into three main sections:
+*                   1. Business Performance and Seasonality Analysis
+*                   2. Customer Segmentation & Behavior Analysis
+*                   3. Cancellation Analysis
+*                   Each section includes multiple SQL queries designed to uncover key insights about booking patterns, customer behavior, and cancellation trends. The findings from each analysis are summarized in detailed comments following the respective queries.
 * AUTHOR:        Kamila Třešničková
-* DATE:          2026-02-28
+* DATE:          2026-03-07
 */
 
 -- =============================================================================
@@ -242,7 +246,6 @@ WHERE is_canceled = 0
 GROUP BY hotel, meal
 ORDER BY hotel, share_pct DESC;
 
-
 /* FINDINGS: 
 - CITY HOTEL:
    - Revenue share: Financial Leader FRA with 17.57% revenue share, surpassing PRT despite having fewer bookings (7,069 vs 10,793).
@@ -365,6 +368,17 @@ FROM hotel_bookings
 GROUP BY hotel, change_status
 ORDER BY hotel, cancellation_rate_pct DESC;
 
+-- 3.6 Correlation between parking/requests and cancellation rates
+SELECT 
+    hotel,
+    CASE WHEN required_car_parking_spaces > 0 THEN 'Requested Parking' ELSE 'No Parking' END AS parking_status,
+    CASE WHEN total_of_special_requests > 0 THEN 'Has Special Requests' ELSE 'No Requests' END AS request_status,
+    COUNT(*) AS total_bookings,
+    ROUND(AVG(is_canceled) * 100, 2) AS cancellation_rate_pct
+FROM hotel_bookings
+GROUP BY hotel, parking_status, request_status
+ORDER BY hotel, parking_status;
+
 /* FINDINGS: 
 - CITY HOTEL:
 - Lead time analysis: Last Minute bookings are highly stable (12.18% cancellation rate), while Very Long Term bookings are extremely volatile (64.07% cancellation rate).
@@ -375,8 +389,8 @@ ORDER BY hotel, cancellation_rate_pct DESC;
 - Other history segments: First-time guests or those with zero cancellations are remarkably more reliable (38.04% cancellation rate). Paradoxically, "Serial Cancelers" (3+ previous) have a lower rate (25.31%), but the sample size is very small (162), which may skew the result.
 - Market segment analysis: Groups are the most volatile segment (68.92% cancellation rate). Direct bookings are the most stable commercial segment (cancellation rate of 17.39%). Online TA (37.45%) and Offline TA/TO (42.88%) show moderate risk, significantly higher than direct channels. 
 - Booking changes analysis: Making a change reduces the likelihood of cancellation by nearly 64% (Guests without changes: cancellation rate of 45.52%, guests with changes only 16.46%.
-
-
+- The Parking Guarantee: Guests who requested a parking space had a 0.00% cancellation rate (across 1,920 bookings). Not a single guest who needed parking cancelled their stay.
+- The Request Impact: For guests without parking, having at least one special request significantly lowers the cancellation risk from 55.74% down to 22.51%.
 - RESORT HOTEL:
 - Lead time analysis: Excellent stability for Last Minute bookings (6.50% cancellation rate), the "Very Long Term" segment peaks at 41.59% cancellations.
 - The cancellation trend: While also showing an upward trend, the Resort is more stable than the City. The risk doubles when moving from "Short Term" (21.91%) to "Very Long Term" (41.59%).
@@ -386,8 +400,9 @@ ORDER BY hotel, cancellation_rate_pct DESC;
 - Other history segments: Standard guests without a cancellation history remain the most stable segment at 26.18%.
 - Market segment analysis: Groups lead in cancelations (42.43% cancellation rate). Direct bookings remain the "gold standard" of reliability (13.49% cancellations). Unlike the city, Offline TA/TO in the resort is very stable (15.21%), while Online TA is more volatile (37.45% cancellation rate).
 - Booking changes analysis: Making a change reduces the likelihood of cancellation by approximately 52% (Guests without changes: cancellation rate of 30.91%, guests with changes only 14.79%).
+- The Parking Guarantee: Identical to the City Hotel – guests requesting parking had a 0.00% cancellation rate (across 5,489 bookings).
+- The Request Impact: Guests with no parking and no special requests are the most volatile segment (36.38% cancellation), while those with special requests are more stable (26.52%).
 */
-
 -- =============================================================================
 -- END OF CANCELLATION ANALYSIS
 -- =============================================================================
